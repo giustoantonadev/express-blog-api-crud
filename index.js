@@ -1,0 +1,28 @@
+const express = require('express');
+const path = require('path');
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+// Serve static assets from public/images at /images
+app.use('/images', express.static(path.join(__dirname, 'public', 'images')));
+
+// Shared posts data
+const posts = require('./data/posts');
+
+app.use(express.json());
+
+app.get('/', (req, res) => {
+    res.send('Server del mio blog');
+});
+
+app.get('/bacheca', (req, res) => {
+    res.json({ posts });
+});
+
+// Register posts router under /posts
+const postsRouter = require('./routers/posts');
+app.use('/posts', postsRouter);
+
+app.listen(PORT, () => {
+    console.log(`Server avviato su http://localhost:${PORT}`);
+});
