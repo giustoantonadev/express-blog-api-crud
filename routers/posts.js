@@ -13,14 +13,7 @@ router.get('/', postsController.index);
 router.get('/:id', postsController.show)
 
 // Create - add a post
-router.post('/', (req, res) => {
-    const { title, content, image, tags } = req.body || {};
-    const id = posts.length ? Math.max(...posts.map(p => p.id)) + 1 : 1;
-    const newPost = { id, title: title || `Post ${id}`, content: content || '', image: image || '', tags: tags || [] };
-    posts.push(newPost);
-    if (req.accepts('json')) return res.status(201).json(newPost);
-    res.send('Creazione del post');
-});
+router.post('/', postsController.store);
 
 // Update - modify a post
 router.put('/:id', (req, res) => {
