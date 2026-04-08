@@ -22,15 +22,32 @@ exports.show = (req, res) => {
 };
 
 exports.store = (req, res) => {
-    console.log(req.body);    
+    console.log(req.body);
     const data = req.body
-    const newId = posts[posts.length - 1].id +1
-    const newPost={
+    const newId = posts[posts.length - 1].id + 1
+    const newPost = {
         id: newId,
         ...data
     }
     posts.push(newPost)
     res.status(201).json(newPost)
+}
+
+exports.update = (req, res) => {
+    const id = Number(req.params.id)
+    const post = posts.find(p => p.id === id)
+
+    if (!post) {
+        return res.status(404).json({ error: `Post ${id} non trovato` })
+    }
+
+    const { title, content, image, tags } = req.body || {}
+    if (title !== undefined) post.title = title;
+    if (content !== undefined) post.content = content;
+    if (image !== undefined) post.image = image;
+    if (tags !== undefined) post.tags = tags;
+
+    return res.json(post)
 }
 
 exports.destroy = (req, res) => {
