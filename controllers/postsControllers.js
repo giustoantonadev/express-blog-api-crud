@@ -14,7 +14,7 @@ exports.index = (req, res) => {
 exports.show = (req, res, next) => {
     const id = Number(req.params.id);
     const post = posts.find(p => p.id === id);
-
+   // throw new Error('esempio di errore')
     if (!post) return next();
 
     return res.json(post)

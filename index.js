@@ -28,6 +28,10 @@ app.use('/posts', postsRouter);
 const notFound = require('./middlewares/notFound');
 app.use(notFound);
 
+// Middleware per gestire errori
+const errorHandler = require('./middlewares/errorHandler');
+app.use(errorHandler);
+
 app.listen(PORT, () => {
     console.log(`Server avviato su http://localhost:${PORT}`);
 });
