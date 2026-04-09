@@ -11,6 +11,7 @@ const posts = require('./data/posts');
 
 app.use(express.json());
 
+
 app.get('/', (req, res) => {
     res.send('Server del mio blog');
 });
@@ -22,6 +23,10 @@ app.get('/bacheca', (req, res) => {
 // Register posts router under /posts
 const postsRouter = require('./routers/posts');
 app.use('/posts', postsRouter);
+
+// Middleware per gestire endpoint non trovati
+const notFound = require('./middlewares/notFound');
+app.use(notFound);
 
 app.listen(PORT, () => {
     console.log(`Server avviato su http://localhost:${PORT}`);

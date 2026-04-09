@@ -11,35 +11,31 @@ exports.index = (req, res) => {
     res.json(result)
 };
 
-exports.show = (req, res) => {
+exports.show = (req, res, next) => {
     const id = Number(req.params.id);
     const post = posts.find(p => p.id === id);
 
-    if (!post) {
-        return res.status(404).json({ error: `Post ${id} non trovato` })
-    }
-    res.json(post)
+    if (!post) return next();
+
+    return res.json(post)
 };
 
 exports.store = (req, res) => {
-    console.log(req.body);
-    const data = req.body
-    const newId = posts[posts.length - 1].id + 1
+    const data = req.body || {}
+    const newId = posts.length ? posts[posts.length - 1].id + 1 : 1
     const newPost = {
         id: newId,
         ...data
     }
     posts.push(newPost)
-    res.status(201).json(newPost)
+    return res.status(201).json(newPost)
 }
 
-exports.update = (req, res) => {
+exports.update = (req, res, next) => {
     const id = Number(req.params.id)
     const post = posts.find(p => p.id === id)
 
-    if (!post) {
-        return res.status(404).json({ error: `Post ${id} non trovato` })
-    }
+    if (!post) return next();
 
     const { title, content, image, tags } = req.body || {}
     if (title !== undefined) post.title = title;
@@ -50,14 +46,12 @@ exports.update = (req, res) => {
     return res.json(post)
 }
 
-exports.destroy = (req, res) => {
+exports.destroy = (req, res, next) => {
     const id = Number(req.params.id);
     const index = posts.findIndex(p => p.id === id);
+    if (index === -1) return next();
 
-    if (index === -1) {
-        return res.status(404).json({ error: `Post ${id} non trovato` })
-    }
     posts.splice(index, 1);
     console.log('Posts aggiornati:', posts);
-    res.status(204).end()
+    return res.status(204).end()
 };
